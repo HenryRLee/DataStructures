@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 
 using namespace std;
@@ -22,7 +21,7 @@ public:
 
 	int BuildRangeSearchVector(vector <T> block);
 	int BuildRangeSearchVector(vector <T> block, int start, int end);
-	int Cleanlayers(void);
+	int CleanLayers(void);
 
 	int SearchRangeSearchVector(int start, int end);
 	int PrintRangeSearchVector(void);
@@ -82,7 +81,7 @@ int RangeSearchVector<T>::BuildRangeSearchVector(vector <T> block, int start, in
 			(end >= block.size()) || (end < start))
 		return 1;
 
-	Cleanlayers();
+	CleanLayers();
 
 	layers.push_back(block);
 
@@ -107,32 +106,13 @@ int RangeSearchVector<T>::BuildRangeSearchVector(vector <T> block, int start, in
 }
 
 template <class T>
-int RangeSearchVector<T>::Cleanlayers(void)
+int RangeSearchVector<T>::CleanLayers(void)
 {
 	for (int i=0; i<layers.size(); i++)
 	{
 		layers[i].clear();
 	}
 	layers.clear();
-	return 0;
-}
-
-template <class T>
-int RangeSearchVector<T>::PrintRangeSearchVector(void)
-{
-	for (int i=0; i<layers.size(); i++)
-	{
-		for (int j=0; j<layers[i].size(); j++)
-		{
-			cout << layers[i][j] << " ";
-			for (int k=0; k<i; k++)
-			{
-				cout << "  ";
-			}
-		}
-		cout << endl;
-	}
-
 	return 0;
 }
 
