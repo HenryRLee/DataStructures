@@ -4,7 +4,8 @@
 using namespace std;
 
 template <typename T>
-pair <bool, T> binarysearch(vector <T> block, int start, int end, int value)
+pair <bool, T> binarysearch(vector <T> block, int start, int end, int value,
+		bool rightprior = true)
 {
 	int mid;
 	pair <bool, T> ret;
@@ -18,7 +19,10 @@ pair <bool, T> binarysearch(vector <T> block, int start, int end, int value)
 		return ret;
 	}
 
-	mid = (end + start)/2;
+	if (rightprior)
+		mid = (end + start)/2;
+	else
+		mid = (end + start + 1)/2;
 
 	if (block[mid] == value)
 	{
@@ -37,11 +41,17 @@ pair <bool, T> binarysearch(vector <T> block, int start, int end, int value)
 
 		if (value < block[mid])
 		{
-			return binarysearch(block, start, mid, value);
+			if (rightprior)
+				return binarysearch(block, start, mid, value, rightprior);
+			else
+				return binarysearch(block, start, mid-1, value, rightprior);
 		}
 		else
 		{
-			return binarysearch(block, mid+1, end, value);
+			if (rightprior)
+				return binarysearch(block, mid+1, end, value, rightprior);
+			else
+				return binarysearch(block, mid, end, value, rightprior);
 		}
 	}
 }
