@@ -377,6 +377,8 @@ bool RedBlackTree<T>::DeleteNode(RedBlackNode <T> * z)
 	if (ycolor == BLACK)
 		DeleteFixup(x);
 
+	delete z;
+
 	return true;
 }
 
