@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 
 using namespace std;
@@ -28,6 +29,7 @@ public:
 template <class T>
 class BinarySearchTree
 {
+protected:
 	BinarySearchNode <T> * root;
 
 public:
