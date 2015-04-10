@@ -1,13 +1,13 @@
 #include <iostream>
-#include "BinarySearchTree.h"
+#include "RedBlackTree.h"
 
 using namespace std;
 
 
 int main(void)
 {
-	BinarySearchTree <int> tree;
-	BinarySearchNode <int> * node;
+	RedBlackTree <int> tree;
+	RedBlackNode <int> * node;
 
 	srand(time(NULL));
 
@@ -27,7 +27,6 @@ int main(void)
 
 	cout << "Tree walk ";
 	tree.InorderTreeWalk();
-
 
 	node = tree.MinimumNode();
 
@@ -51,7 +50,7 @@ int main(void)
 
 	if (node != NULL)
 	{
-		BinarySearchNode <int> * nextnode;
+		RedBlackNode <int> * nextnode;
 
 		cout << "Found key ";
 		node->PrintKey();
@@ -84,6 +83,7 @@ int main(void)
 		}
 
 	}
+
 	if (tree.DeleteElement(77))
 	{
 		cout << "Delete element 77" << endl;
