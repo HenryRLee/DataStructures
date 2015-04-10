@@ -15,28 +15,19 @@ public:
 
 	void PrintKey(void);
 
-	void InorderTreeWalk(void);
-
-	BinarySearchNode <T> * MinimumNode(void);
-	BinarySearchNode <T> * MaximumNode(void);
-
-	BinarySearchNode <T> * SuccessorNode(void);
-	BinarySearchNode <T> * PredecessorNode(void);
-
 	BinarySearchNode(void);
 };
 
 template <class T>
 class BinarySearchTree
 {
-protected:
+private:
 	BinarySearchNode <T> * root;
 
+	void Transplant(BinarySearchNode <T> * u, BinarySearchNode <T> * v);
 public:
 	void InsertNode(BinarySearchNode <T> * z);
 	void InsertElement(T key);
-
-	void Transplant(BinarySearchNode <T> * u, BinarySearchNode <T> * v);
 
 	bool DeleteNode(BinarySearchNode <T> * z);
 	bool DeleteElement(T key);
@@ -47,6 +38,14 @@ public:
 	BinarySearchNode <T> * MinimumNode(void);
 	BinarySearchNode <T> * MaximumNode(void);
 
+	void InorderTreeWalk(BinarySearchNode <T> * x);
+
+	BinarySearchNode <T> * MinimumNode(BinarySearchNode <T> * x);
+	BinarySearchNode <T> * MaximumNode(BinarySearchNode <T> * x);
+
+	BinarySearchNode <T> * SuccessorNode(BinarySearchNode <T> * x);
+	BinarySearchNode <T> * PredecessorNode(BinarySearchNode <T> * x);
+
 	BinarySearchTree(void);
 };
 
@@ -54,94 +53,6 @@ template <class T>
 void BinarySearchNode<T>::PrintKey(void)
 {
 	cout << key << " ";
-}
-
-template <class T>
-void BinarySearchNode<T>::InorderTreeWalk(void)
-{
-	if (left != NULL)
-		left->InorderTreeWalk();
-
-	PrintKey();
-
-	if (right != NULL)
-		right->InorderTreeWalk();
-}
-
-template <class T>
-BinarySearchNode <T> * BinarySearchNode<T>::MinimumNode(void)
-{
-	BinarySearchNode <T> * x;
-
-	x = this;
-
-	while (x->left != NULL)
-		x = x->left;
-
-	return x;
-}
-
-template <class T>
-BinarySearchNode <T> * BinarySearchNode<T>::MaximumNode(void)
-{
-	BinarySearchNode <T> * x;
-
-	x = this;
-
-	while (x->right != NULL)
-		x = x->right;
-
-	return x;
-}
-
-template <class T>
-BinarySearchNode <T> * BinarySearchNode<T>::SuccessorNode(void)
-{
-	BinarySearchNode <T> * x;
-	BinarySearchNode <T> * y;
-
-	if (this->right != NULL)
-	{
-		return this->right->MinimumNode();
-	}
-	else
-	{
-		y = this->parent;
-		x = this;
-
-		while (y != NULL and x == y->right)
-		{
-			x = y;
-			y = y->parent;
-		}
-
-		return y;
-	}
-}
-
-template <class T>
-BinarySearchNode <T> * BinarySearchNode<T>::PredecessorNode(void)
-{
-	BinarySearchNode <T> * x;
-	BinarySearchNode <T> * y;
-
-	if (this->left != NULL)
-	{
-		return this->left->MaximumNode();
-	}
-	else
-	{
-		y = this->parent;
-		x = this;
-
-		while (y != NULL and x == y->left)
-		{
-			x = y;
-			y = y->parent;
-		}
-
-		return y;
-	}
 }
 
 template <class T>
@@ -183,19 +94,19 @@ void BinarySearchTree<T>::InsertNode(BinarySearchNode <T> * z)
 template <class T>
 void BinarySearchTree<T>::InsertElement(T key)
 {
-	BinarySearchNode <T> * nodeNew;
+	BinarySearchNode <T> * z;
 
-	nodeNew = new BinarySearchNode <T>;
+	z = new BinarySearchNode <T>;
 
-	if (NULL == nodeNew)
+	if (NULL == z)
 	{
 		cout << "Cannot allocate memory for a new BinarySearchNode" << endl;
 		return;
 	}
 
-	nodeNew->key = key;
+	z->key = key;
 
-	InsertNode(nodeNew);
+	InsertNode(z);
 }
 
 template <class T>
@@ -229,7 +140,7 @@ bool BinarySearchTree<T>::DeleteNode(BinarySearchNode <T> * z)
 	else
 	{
 		BinarySearchNode <T> * y;
-		y = z->right->MinimumNode();
+		y = MinimumNode(z->right);
 		
 		if (y->parent != z)
 		{
@@ -267,8 +178,15 @@ bool BinarySearchTree<T>::DeleteElement(T key)
 template <class T>
 void BinarySearchTree<T>::InorderTreeWalk(void)
 {
-	root -> InorderTreeWalk();
-	cout << endl;
+	if (root != NULL)
+	{
+		InorderTreeWalk(root);
+		cout << endl;
+	}
+	else
+	{
+		cout << "Tree is empty" << endl;
+	}
 }
 
 template <class T>
@@ -292,13 +210,92 @@ BinarySearchNode <T> * BinarySearchTree<T>::KeySearch(T key)
 template <class T>
 BinarySearchNode <T> * BinarySearchTree<T>::MinimumNode(void)
 {
-	return root->MinimumNode();
+	return MinimumNode(root);
 }
 
 template <class T>
 BinarySearchNode <T> * BinarySearchTree<T>::MaximumNode(void)
 {
-	return root->MaximumNode();
+	return MaximumNode(root);
+}
+
+template <class T>
+void BinarySearchTree<T>::InorderTreeWalk(BinarySearchNode <T> * x)
+{
+	if (NULL == x)
+		return;
+
+	if (x->left != NULL)
+		InorderTreeWalk(x->left);
+
+	x->PrintKey();
+
+	if (x->right != NULL)
+		InorderTreeWalk(x->right);
+}
+
+template <class T>
+BinarySearchNode <T> * BinarySearchTree<T>::MinimumNode(BinarySearchNode <T> * x)
+{
+	while (x->left != NULL)
+		x = x->left;
+
+	return x;
+}
+
+template <class T>
+BinarySearchNode <T> * BinarySearchTree<T>::MaximumNode(BinarySearchNode <T> * x)
+{
+	while (x->right != NULL)
+		x = x->right;
+
+	return x;
+}
+
+template <class T>
+BinarySearchNode <T> * BinarySearchTree<T>::SuccessorNode(BinarySearchNode <T> * x)
+{
+	BinarySearchNode <T> * y;
+
+	if (x->right != NULL)
+	{
+		return MinimumNode(x->right);
+	}
+	else
+	{
+		y = x->parent;
+
+		while (y != NULL and x == y->right)
+		{
+			x = y;
+			y = y->parent;
+		}
+
+		return y;
+	}
+}
+
+template <class T>
+BinarySearchNode <T> * BinarySearchTree<T>::PredecessorNode(BinarySearchNode <T> * x)
+{
+	BinarySearchNode <T> * y;
+
+	if (x->left != NULL)
+	{
+		return MaximumNode(x->left);
+	}
+	else
+	{
+		y = x->parent;
+
+		while (y != NULL and x == y->left)
+		{
+			x = y;
+			y = y->parent;
+		}
+
+		return y;
+	}
 }
 
 template <class T>
