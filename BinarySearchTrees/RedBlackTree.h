@@ -153,30 +153,7 @@ void RedBlackTree<T>::InsertFixup(BinarySearchNode <T> * z)
 template <class T>
 void RedBlackTree<T>::InsertNode(BinarySearchNode <T> * z)
 {
-	BinarySearchNode <T> * x;
-	BinarySearchNode <T> * y;
-
-	y = nil;
-	x = root;
-
-	while (x != nil)
-	{
-		y = x;
-		
-		if (z->key < x->key)
-			x = x->left;
-		else
-			x = x->right;
-	}
-
-	z->parent = y;
-
-	if (y == nil)
-		root = z;
-	else if (z->key < y->key)
-		y->left = z;
-	else
-		y->right = z;
+	BinarySearchTree <T>::InsertNode(z);
 
 	z->left = nil;
 	z->right = nil;
