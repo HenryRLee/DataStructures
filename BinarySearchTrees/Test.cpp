@@ -7,7 +7,7 @@ using namespace std;
 int main(void)
 {
 	RedBlackTree <int> tree;
-	RedBlackNode <int> * node;
+	BinarySearchNode <int> * node;
 
 	srand(time(NULL));
 
@@ -50,7 +50,7 @@ int main(void)
 
 	if (node != NULL)
 	{
-		RedBlackNode <int> * nextnode;
+		BinarySearchNode <int> * nextnode;
 
 		cout << "Found key ";
 		node->PrintKey();

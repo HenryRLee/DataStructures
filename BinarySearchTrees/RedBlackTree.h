@@ -7,74 +7,32 @@ enum color
 	BLACK
 };
 
-template <class T> class RedBlackNode;
-template <class T> class RedBlackTree;
-
-template <class T>
-class RedBlackNode : public BinarySearchNode <T>
-{
-	int color;
-
-	RedBlackNode <T> * left;
-	RedBlackNode <T> * right;
-	RedBlackNode <T> * parent;
-
-public:
-	RedBlackNode(void);
-
-	friend class RedBlackTree <T>;
-};
-
 template <class T>
 class RedBlackTree : public BinarySearchTree <T>
 {
+	using BinarySearchTree <T>::root;
+	using BinarySearchTree <T>::nil;
 private:
-	RedBlackNode <T> * nil;
-	RedBlackNode <T> * root;
+	void Transplant(BinarySearchNode <T> * u, BinarySearchNode <T> * v);
 
-	void Transplant(RedBlackNode <T> * u, RedBlackNode <T> * v);
+	void LeftRotate(BinarySearchNode <T> * x);
+	void RightRotate(BinarySearchNode <T> * x);
 
-	void LeftRotate(RedBlackNode <T> * x);
-	void RightRotate(RedBlackNode <T> * x);
-
-	void InsertFixup(RedBlackNode <T> * z);
-	void DeleteFixup(RedBlackNode <T> * x);
+	void InsertFixup(BinarySearchNode <T> * z);
+	void DeleteFixup(BinarySearchNode <T> * x);
 public:
-	void InsertNode(RedBlackNode <T> * z);
+	void InsertNode(BinarySearchNode <T> * z);
 	void InsertElement(T key);
 
-	bool DeleteNode(RedBlackNode <T> * z);
+	bool DeleteNode(BinarySearchNode <T> * z);
 	bool DeleteElement(T key);
-
-	void InorderTreeWalk(void);
-
-	RedBlackNode <T> * KeySearch(T key);
-	RedBlackNode <T> * MinimumNode(void);
-	RedBlackNode <T> * MaximumNode(void);
-
-	void InorderTreeWalk(RedBlackNode <T> * x);
-
-	RedBlackNode <T> * MinimumNode(RedBlackNode <T> * x);
-	RedBlackNode <T> * MaximumNode(RedBlackNode <T> * x);
-
-	RedBlackNode <T> * SuccessorNode(RedBlackNode <T> * x);
-	RedBlackNode <T> * PredecessorNode(RedBlackNode <T> * x);
 
 	RedBlackTree(void);
 	~RedBlackTree(void);
 };
 
 template <class T>
-RedBlackNode<T>::RedBlackNode(void)
-{
-	color = BLACK;
-	left = NULL;
-	right = NULL;
-	parent = NULL;
-}
-
-template <class T>
-void RedBlackTree<T>::Transplant(RedBlackNode <T> * u, RedBlackNode <T> * v)
+void RedBlackTree<T>::Transplant(BinarySearchNode <T> * u, BinarySearchNode <T> * v)
 {
 	if (u->parent == nil)
 		root = v;
@@ -87,9 +45,9 @@ void RedBlackTree<T>::Transplant(RedBlackNode <T> * u, RedBlackNode <T> * v)
 }
 
 template <class T>
-void RedBlackTree<T>::LeftRotate(RedBlackNode <T> * x)
+void RedBlackTree<T>::LeftRotate(BinarySearchNode <T> * x)
 {
-	RedBlackNode <T> * y;
+	BinarySearchNode <T> * y;
 
 	y = x->right;
 
@@ -110,9 +68,9 @@ void RedBlackTree<T>::LeftRotate(RedBlackNode <T> * x)
 }
 
 template <class T>
-void RedBlackTree<T>::RightRotate(RedBlackNode <T> * x)
+void RedBlackTree<T>::RightRotate(BinarySearchNode <T> * x)
 {
-	RedBlackNode <T> * y;
+	BinarySearchNode <T> * y;
 
 	y = x->left;
 
@@ -133,11 +91,11 @@ void RedBlackTree<T>::RightRotate(RedBlackNode <T> * x)
 }
 
 template <class T>
-void RedBlackTree<T>::InsertFixup(RedBlackNode <T> * z)
+void RedBlackTree<T>::InsertFixup(BinarySearchNode <T> * z)
 {
 	while (z->parent->color == RED)
 	{
-		RedBlackNode <T> * y;
+		BinarySearchNode <T> * y;
 
 		if (z->parent == z->parent->parent->left)
 		{
@@ -193,10 +151,10 @@ void RedBlackTree<T>::InsertFixup(RedBlackNode <T> * z)
 }
 
 template <class T>
-void RedBlackTree<T>::InsertNode(RedBlackNode <T> * z)
+void RedBlackTree<T>::InsertNode(BinarySearchNode <T> * z)
 {
-	RedBlackNode <T> * x;
-	RedBlackNode <T> * y;
+	BinarySearchNode <T> * x;
+	BinarySearchNode <T> * y;
 
 	y = nil;
 	x = root;
@@ -230,13 +188,13 @@ void RedBlackTree<T>::InsertNode(RedBlackNode <T> * z)
 template <class T>
 void RedBlackTree<T>::InsertElement(T key)
 {
-	RedBlackNode <T> * z;
+	BinarySearchNode <T> * z;
 
-	z = new RedBlackNode <T>;
+	z = new BinarySearchNode <T>;
 
 	if (NULL == z)
 	{
-		cout << "Cannot allocate memory for a new RedBlackNode" << endl;
+		cout << "Cannot allocate memory for a new BinarySearchNode" << endl;
 		return;
 	}
 
@@ -246,11 +204,11 @@ void RedBlackTree<T>::InsertElement(T key)
 }
 
 template <class T>
-void RedBlackTree<T>::DeleteFixup(RedBlackNode <T> * x)
+void RedBlackTree<T>::DeleteFixup(BinarySearchNode <T> * x)
 {
 	while (x != root && x->color == BLACK)
 	{
-		RedBlackNode <T> * w;
+		BinarySearchNode <T> * w;
 
 		if (x == x->parent->left)
 		{
@@ -332,11 +290,14 @@ void RedBlackTree<T>::DeleteFixup(RedBlackNode <T> * x)
 }
 
 template <class T>
-bool RedBlackTree<T>::DeleteNode(RedBlackNode <T> * z)
+bool RedBlackTree<T>::DeleteNode(BinarySearchNode <T> * z)
 {
-	RedBlackNode <T> * x;
-	RedBlackNode <T> * y;
+	BinarySearchNode <T> * x;
+	BinarySearchNode <T> * y;
 	int ycolor;
+
+	if (z == nil)
+		return false;
 
 	y = z;
 	ycolor = y->color;
@@ -353,7 +314,7 @@ bool RedBlackTree<T>::DeleteNode(RedBlackNode <T> * z)
 	}
 	else
 	{
-		y = MinimumNode(z->right);
+		y = BinarySearchTree <T>::MinimumNode(z->right);
 		ycolor = y->color;
 		x = y->right;
 		
@@ -385,9 +346,9 @@ bool RedBlackTree<T>::DeleteNode(RedBlackNode <T> * z)
 template <class T>
 bool RedBlackTree<T>::DeleteElement(T key)
 {
-	RedBlackNode <T> * z;
+	BinarySearchNode <T> * z;
 
-	z = KeySearch(key);
+	z = BinarySearchTree <T>::KeySearch(key);
 
 	if (z != nil)
 	{
@@ -401,135 +362,13 @@ bool RedBlackTree<T>::DeleteElement(T key)
 }
 
 template <class T>
-void RedBlackTree<T>::InorderTreeWalk(void)
-{
-	if (root != nil)
-	{
-		InorderTreeWalk(root);
-		cout << endl;
-	}
-	else
-	{
-		cout << "Tree is empty" << endl;
-	}
-}
-
-template <class T>
-void RedBlackTree<T>::InorderTreeWalk(RedBlackNode <T> * x)
-{
-	if (x == nil)
-		return;
-
-	if (x->left != nil)
-		InorderTreeWalk(x->left);
-
-	x->PrintKey();
-
-	if (x->right != nil)
-		InorderTreeWalk(x->right);
-}
-
-template <class T>
-RedBlackNode <T> * RedBlackTree<T>::KeySearch(T key)
-{
-	RedBlackNode <T> * x;
-
-	x = root;
-
-	while (x != nil && key != x->key)
-	{
-		if (key < x->key)
-			x = x->left;
-		else
-			x = x->right;
-	}
-
-	return x;
-}
-
-template <class T>
-RedBlackNode <T> * RedBlackTree<T>::MinimumNode(void)
-{
-	return MinimumNode(root);
-}
-
-template <class T>
-RedBlackNode <T> * RedBlackTree<T>::MaximumNode(void)
-{
-	return MaximumNode(root);
-}
-
-template <class T>
-RedBlackNode <T> * RedBlackTree<T>::MinimumNode(RedBlackNode <T> * x)
-{
-	while (x->left != nil)
-		x = x->left;
-
-	return x;
-}
-
-template <class T>
-RedBlackNode <T> * RedBlackTree<T>::MaximumNode(RedBlackNode <T> * x)
-{
-	while (x->right != nil)
-		x = x->right;
-
-	return x;
-}
-
-template <class T>
-RedBlackNode <T> * RedBlackTree<T>::SuccessorNode(RedBlackNode <T> * x)
-{
-	RedBlackNode <T> * y;
-
-	if (x->right != nil)
-	{
-		return MinimumNode(x->right);
-	}
-	else
-	{
-		y = x->parent;
-
-		while (y != nil && x == y->right)
-		{
-			x = y;
-			y = y->parent;
-		}
-
-		return y;
-	}
-}
-
-template <class T>
-RedBlackNode <T> * RedBlackTree<T>::PredecessorNode(RedBlackNode <T> * x)
-{
-	RedBlackNode <T> * y;
-
-	if (x->left != nil)
-	{
-		return MaximumNode(x->left);
-	}
-	else
-	{
-		y = x->parent;
-
-		while (y != nil && x == y->left)
-		{
-			x = y;
-			y = y->parent;
-		}
-
-		return y;
-	}
-}
-
-template <class T>
 RedBlackTree<T>::RedBlackTree(void)
 {
-	nil = new RedBlackNode <T>;
+	nil = new BinarySearchNode <T>;
 	nil->parent = nil;
 	nil->left = nil;
 	nil->right = nil;
+	nil->color = BLACK;
 
 	root = nil;
 }

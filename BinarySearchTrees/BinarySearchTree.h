@@ -5,12 +5,15 @@ using namespace std;
 
 template <class T> class BinarySearchNode;
 template <class T> class BinarySearchTree;
+template <class T> class RedBlackTree;
 
 template <class T>
 class BinarySearchNode
 {
 protected:
 	T key;
+
+	int color;
 
 	BinarySearchNode <T> * left;
 	BinarySearchNode <T> * right;
@@ -22,6 +25,7 @@ public:
 	BinarySearchNode(void);
 
 	friend class BinarySearchTree <T>;
+	friend class RedBlackTree <T>;
 };
 
 template <class T>
@@ -29,6 +33,7 @@ class BinarySearchTree
 {
 protected:
 	BinarySearchNode <T> * root;
+	BinarySearchNode <T> * nil;
 
 	void Transplant(BinarySearchNode <T> * u, BinarySearchNode <T> * v);
 public:
@@ -75,10 +80,10 @@ void BinarySearchTree<T>::InsertNode(BinarySearchNode <T> * z)
 	BinarySearchNode <T> * x;
 	BinarySearchNode <T> * y;
 
-	y = NULL;
+	y = nil;
 	x = root;
 
-	while (x != NULL)
+	while (x != nil)
 	{
 		y = x;
 		if (z->key < x->key)
@@ -89,7 +94,7 @@ void BinarySearchTree<T>::InsertNode(BinarySearchNode <T> * z)
 
 	z->parent = y;
 
-	if (y == NULL)
+	if (y == nil)
 		root = z;				// tree was empty
 	else if (z->key < y->key)
 		y->left = z;
@@ -118,28 +123,28 @@ void BinarySearchTree<T>::InsertElement(T key)
 template <class T>
 void BinarySearchTree<T>::Transplant(BinarySearchNode <T> * u, BinarySearchNode <T> * v)
 {
-	if (NULL == u->parent)
+	if (nil == u->parent)
 		root = v;
 	else if (u == u->parent->left)
 		u->parent->left = v;
 	else
 		u->parent->right = v;
 
-	if (v != NULL)
+	if (v != nil)
 		v->parent = u->parent;
 }
 
 template <class T>
 bool BinarySearchTree<T>::DeleteNode(BinarySearchNode <T> * z)
 {
-	if (NULL == z)
+	if (nil == z)
 		return false;
 
-	if (NULL == z->left)
+	if (nil == z->left)
 	{
 		Transplant(z, z->right);
 	}
-	else if (NULL == z->right)
+	else if (nil == z->right)
 	{
 		Transplant(z, z->left);
 	}
@@ -170,7 +175,7 @@ bool BinarySearchTree<T>::DeleteElement(T key)
 
 	z = KeySearch(key);
 
-	if (z != NULL)
+	if (z != nil)
 	{
 		DeleteNode(z);
 		return true;
@@ -184,7 +189,7 @@ bool BinarySearchTree<T>::DeleteElement(T key)
 template <class T>
 void BinarySearchTree<T>::InorderTreeWalk(void)
 {
-	if (root != NULL)
+	if (root != nil)
 	{
 		InorderTreeWalk(root);
 		cout << endl;
@@ -202,7 +207,7 @@ BinarySearchNode <T> * BinarySearchTree<T>::KeySearch(T key)
 
 	x = root;
 
-	while (x != NULL && key != x->key)
+	while (x != nil && key != x->key)
 	{
 		if (key < x->key)
 			x = x->left;
@@ -228,24 +233,24 @@ BinarySearchNode <T> * BinarySearchTree<T>::MaximumNode(void)
 template <class T>
 void BinarySearchTree<T>::InorderTreeWalk(BinarySearchNode <T> * x)
 {
-	if (NULL == x)
+	if (nil == x)
 		return;
 
-	if (x->left != NULL)
+	if (x->left != nil)
 		InorderTreeWalk(x->left);
 
 	x->PrintKey();
 
-	if (x->right != NULL)
+	if (x->right != nil)
 		InorderTreeWalk(x->right);
 }
 
 template <class T>
 BinarySearchNode <T> * BinarySearchTree<T>::MinimumNode(BinarySearchNode <T> * x)
 {
-	if (x != NULL)
+	if (x != nil)
 	{
-		while (x->left != NULL)
+		while (x->left != nil)
 			x = x->left;
 	}
 
@@ -255,9 +260,9 @@ BinarySearchNode <T> * BinarySearchTree<T>::MinimumNode(BinarySearchNode <T> * x
 template <class T>
 BinarySearchNode <T> * BinarySearchTree<T>::MaximumNode(BinarySearchNode <T> * x)
 {
-	if (x != NULL)
+	if (x != nil)
 	{
-		while (x->right != NULL)
+		while (x->right != nil)
 			x = x->right;
 	}
 
@@ -269,10 +274,10 @@ BinarySearchNode <T> * BinarySearchTree<T>::SuccessorNode(BinarySearchNode <T> *
 {
 	BinarySearchNode <T> * y;
 
-	if (NULL == x)
-		return NULL;
+	if (nil == x)
+		return nil;
 
-	if (x->right != NULL)
+	if (x->right != nil)
 	{
 		return MinimumNode(x->right);
 	}
@@ -280,7 +285,7 @@ BinarySearchNode <T> * BinarySearchTree<T>::SuccessorNode(BinarySearchNode <T> *
 	{
 		y = x->parent;
 
-		while (y != NULL && x == y->right)
+		while (y != nil && x == y->right)
 		{
 			x = y;
 			y = y->parent;
@@ -295,10 +300,10 @@ BinarySearchNode <T> * BinarySearchTree<T>::PredecessorNode(BinarySearchNode <T>
 {
 	BinarySearchNode <T> * y;
 
-	if (NULL == x)
-		return NULL;
+	if (nil == x)
+		return nil;
 
-	if (x->left != NULL)
+	if (x->left != nil)
 	{
 		return MaximumNode(x->left);
 	}
@@ -306,7 +311,7 @@ BinarySearchNode <T> * BinarySearchTree<T>::PredecessorNode(BinarySearchNode <T>
 	{
 		y = x->parent;
 
-		while (y != NULL && x == y->left)
+		while (y != nil && x == y->left)
 		{
 			x = y;
 			y = y->parent;
@@ -320,4 +325,5 @@ template <class T>
 BinarySearchTree<T>::BinarySearchTree(void)
 {
 	root = NULL;
+	nil = NULL;
 }
