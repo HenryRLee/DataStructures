@@ -21,7 +21,7 @@ public:
 template <class T>
 class BinarySearchTree
 {
-private:
+protected:
 	BinarySearchNode <T> * root;
 
 	void Transplant(BinarySearchNode <T> * u, BinarySearchNode <T> * v);
@@ -265,7 +265,7 @@ BinarySearchNode <T> * BinarySearchTree<T>::SuccessorNode(BinarySearchNode <T> *
 	{
 		y = x->parent;
 
-		while (y != NULL and x == y->right)
+		while (y != NULL && x == y->right)
 		{
 			x = y;
 			y = y->parent;
@@ -288,7 +288,7 @@ BinarySearchNode <T> * BinarySearchTree<T>::PredecessorNode(BinarySearchNode <T>
 	{
 		y = x->parent;
 
-		while (y != NULL and x == y->left)
+		while (y != NULL && x == y->left)
 		{
 			x = y;
 			y = y->parent;
