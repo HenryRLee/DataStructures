@@ -3,19 +3,25 @@
 
 using namespace std;
 
+template <class T> class BinarySearchNode;
+template <class T> class BinarySearchTree;
+
 template <class T>
 class BinarySearchNode
 {
-public:
+protected:
 	T key;
 
 	BinarySearchNode <T> * left;
 	BinarySearchNode <T> * right;
 	BinarySearchNode <T> * parent;
 
+public:
 	void PrintKey(void);
 
 	BinarySearchNode(void);
+
+	friend class BinarySearchTree <T>;
 };
 
 template <class T>

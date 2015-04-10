@@ -7,17 +7,22 @@ enum color
 	BLACK
 };
 
+template <class T> class RedBlackNode;
+template <class T> class RedBlackTree;
+
 template <class T>
 class RedBlackNode : public BinarySearchNode <T>
 {
-public:
 	int color;
 
 	RedBlackNode <T> * left;
 	RedBlackNode <T> * right;
 	RedBlackNode <T> * parent;
 
+public:
 	RedBlackNode(void);
+
+	friend class RedBlackTree <T>;
 };
 
 template <class T>
