@@ -243,8 +243,11 @@ void BinarySearchTree<T>::InorderTreeWalk(BinarySearchNode <T> * x)
 template <class T>
 BinarySearchNode <T> * BinarySearchTree<T>::MinimumNode(BinarySearchNode <T> * x)
 {
-	while (x->left != NULL)
-		x = x->left;
+	if (x != NULL)
+	{
+		while (x->left != NULL)
+			x = x->left;
+	}
 
 	return x;
 }
@@ -252,8 +255,11 @@ BinarySearchNode <T> * BinarySearchTree<T>::MinimumNode(BinarySearchNode <T> * x
 template <class T>
 BinarySearchNode <T> * BinarySearchTree<T>::MaximumNode(BinarySearchNode <T> * x)
 {
-	while (x->right != NULL)
-		x = x->right;
+	if (x != NULL)
+	{
+		while (x->right != NULL)
+			x = x->right;
+	}
 
 	return x;
 }
@@ -262,6 +268,9 @@ template <class T>
 BinarySearchNode <T> * BinarySearchTree<T>::SuccessorNode(BinarySearchNode <T> * x)
 {
 	BinarySearchNode <T> * y;
+
+	if (NULL == x)
+		return NULL;
 
 	if (x->right != NULL)
 	{
@@ -285,6 +294,9 @@ template <class T>
 BinarySearchNode <T> * BinarySearchTree<T>::PredecessorNode(BinarySearchNode <T> * x)
 {
 	BinarySearchNode <T> * y;
+
+	if (NULL == x)
+		return NULL;
 
 	if (x->left != NULL)
 	{
