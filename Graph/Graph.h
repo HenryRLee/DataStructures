@@ -7,7 +7,7 @@
 
 using namespace std;
 
-template <class T> class Node;
+class Node;
 template <class T> class Graph;
 
 
@@ -49,6 +49,8 @@ protected:
 	vector < vector < pair <int, int> > > adjList;	// pair <idx, distance>
 	vector < vector <int> > adjMatrix;
 
+	vector <Node> vertex;
+
 	void CleanMatrix(void);
 	void UpdateMatrix(void);
 
@@ -59,10 +61,9 @@ protected:
 
 	virtual bool Connected(int distance);
 
-	virtual int CustomFunctionBFS(int src, int dst, vector <int> path,
-			vector <Node> &vertex);
-	vector<int> BFSbyList(int source, int destination, vector <Node> &vertex);
-	vector<int> BFSbyMatrix(int source, int destination, vector <Node> &vertex);
+	virtual int CustomFunctionBFS(int src, int dst, vector <int> path);
+	vector<int> BFSbyList(int source, int destination);
+	vector<int> BFSbyMatrix(int source, int destination);
 
 public:
 	void AddEdgeByName(T a, T b, int distance = 1);
@@ -179,7 +180,7 @@ void Graph<T>::UpdateMatrix(void)
 template <class T>
 bool Graph<T>::AddNameToMap(T a)
 {
-	if (mapIdxToName[mapNameToIdx[a]] == a)
+	if (mapIdxToName[mapNameToIdx[a]] == a && maxIdx > 0)
 		return true;
 
 	if (maxIdx >= mapIdxToName.size())
@@ -196,12 +197,12 @@ bool Graph<T>::AddNameToMap(T a)
 }
 
 template <class T>
-vector <int> Graph<T>::BFSbyList(int source, int destination,
-		vector <Node> &vertex)
+vector <int> Graph<T>::BFSbyList(int source, int destination)
 {
 	vector <int> path;
 	queue <int> q;
 
+	vertex.clear();
 	vertex.resize(size);
 
 	vertex[source].color = GRAY;
@@ -266,14 +267,14 @@ vector <int> Graph<T>::BFSbyList(int source, int destination,
 }
 
 template <class T>
-vector <int> Graph<T>::BFSbyMatrix(int source, int destination,
-		vector <Node> &vertex)
+vector <int> Graph<T>::BFSbyMatrix(int source, int destination)
 {
 	vector <int> path;
 	queue <int> q;
 
 	UpdateMatrix();
 
+	vertex.clear();
 	vertex.resize(size);
 
 	vertex[source].color = GRAY;
@@ -320,6 +321,7 @@ vector <int> Graph<T>::BFSbyMatrix(int source, int destination,
 						path.push_back(cur);
 						cur = parent;
 					}
+					path.push_back(cur);
 					path.push_back(source);
 
 					reverse(path.begin(), path.end());
@@ -346,8 +348,7 @@ bool Graph<T>::Connected(int distance)
 }
 		
 template <class T>
-int Graph<T>::CustomFunctionBFS(int src, int dst, vector <int> path,
-		vector <Node> &vertex)
+int Graph<T>::CustomFunctionBFS(int src, int dst, vector <int> path)
 {
 	/*
 	 * This one simply returns the distance
@@ -374,11 +375,11 @@ int Graph<T>::BFS(T source, T destination, bool byMatrix)
 	dst = mapNameToIdx[destination];
 
 	if (byMatrix)
-		path = BFSbyMatrix(src, dst, vertex);
+		path = BFSbyMatrix(src, dst);
 	else
-		path = BFSbyList(src, dst, vertex);
+		path = BFSbyList(src, dst);
 
-	return CustomFunctionBFS(src, dst, path, vertex);
+	return CustomFunctionBFS(src, dst, path);
 }
 
 template <class T>
