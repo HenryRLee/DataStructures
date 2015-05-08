@@ -72,6 +72,7 @@ public:
 
 	int BFS(T source, T destination, bool byMatrix = false);
 
+	void Clear(void);
 	void Resize(int size);
 	void SetInitValue(int val);
 
@@ -405,6 +406,13 @@ void Graph<T>::PrintMatrix(void)
 		cout << endl;
 	}
 	cout << endl;
+}
+
+template <class T>
+void Graph<T>::Clear(void)
+{
+	maxIdx = 0;
+	InitializeGraph();
 }
 
 template <class T>
