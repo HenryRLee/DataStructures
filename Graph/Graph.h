@@ -1,45 +1,42 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <algorithm>
 #include <map>
 
 using namespace std;
 
-enum color
-{
-	WHITE,
-	GRAY,
-	BLACK
-};
-
-template <class T> class GraphNode;
+template <class T> class Node;
 template <class T> class Graph;
 
-template <class T>
-class GraphNode
-{
-protected:
-	T key;
-
-	int color;
-	unsigned int distance;
-	int parent;
-
-public:
-	void PrintKey(void);
-	T ReturnKey(void);
-
-	int GetDistance(void);
-
-	GraphNode(void);
-
-	friend class Graph <T>;
-};
 
 template <class T>
 class Graph
 {
 protected:
+	enum color
+	{
+		WHITE,
+		GRAY,
+		BLACK
+	};
+
+	class Node
+	{
+	protected:
+		unsigned int distance;
+		int parent;
+		int color;
+
+	public:
+		int GetDistance(void);
+
+		Node(void);
+
+		friend class Graph <T>;
+	};
+
 	unsigned int size;
 
 	unsigned int maxIdx;
@@ -60,10 +57,19 @@ protected:
 	bool AddNameToMap(T a);
 	void AddEdgeByIdx(int a, int b, int distance = 1);
 
+	virtual bool Connected(int distance);
+
+	virtual int CustomFunctionBFS(int src, int dst, vector <int> path,
+			vector <Node> &vertex);
+	vector<int> BFSbyList(int source, int destination, vector <Node> &vertex);
+	vector<int> BFSbyMatrix(int source, int destination, vector <Node> &vertex);
+
 public:
 	void AddEdgeByName(T a, T b, int distance = 1);
 
 	void PrintMatrix(void);
+
+	int BFS(T source, T destination, bool byMatrix = false);
 
 	void Resize(int size);
 	void SetInitValue(int val);
@@ -73,27 +79,15 @@ public:
 };
 
 template <class T>
-void GraphNode<T>::PrintKey(void)
-{
-	cout << key << " ";
-}
-
-template <class T>
-T GraphNode<T>::ReturnKey(void)
-{
-	return key;
-}
-
-template <class T>
-int GraphNode<T>::GetDistance(void)
+int Graph<T>::Node::GetDistance(void)
 {
 	return distance;
 }
 
 template <class T>
-GraphNode<T>::GraphNode(void)
+Graph<T>::Node::Node(void)
 {
-	parent = 0;
+	parent = -1;
 	color = WHITE;
 	distance = -1;
 }
@@ -199,6 +193,192 @@ bool Graph<T>::AddNameToMap(T a)
 	mapIdxToName[mapNameToIdx[a]] = a;
 
 	return true;
+}
+
+template <class T>
+vector <int> Graph<T>::BFSbyList(int source, int destination,
+		vector <Node> &vertex)
+{
+	vector <int> path;
+	queue <int> q;
+
+	vertex.resize(size);
+
+	vertex[source].color = GRAY;
+	vertex[source].distance = 0;
+	vertex[source].parent = -1;
+
+	q.push(source);
+
+	while (!q.empty())
+	{
+		int u;
+		u = q.front();
+		q.pop();
+
+		for (int i=0; i<adjList[u].size(); i++)
+		{
+			pair <int, int> data;
+			int v;
+			int distance;
+
+			data = adjList[u][i];
+			v = data.first;
+			distance = data.second;
+
+			if (v >= vertex.size())
+			{
+				cout << "Error: index out of range" << endl;
+				return path;
+			}
+
+			if (vertex[v].color == WHITE)
+			{
+				vertex[v].color = GRAY;
+				vertex[v].distance = vertex[u].distance + distance;
+				vertex[v].parent = u;
+
+				if (v == destination)
+				{
+					int cur;
+					int parent;
+
+					cur = v;
+					while ((parent = vertex[cur].parent) != source)
+					{
+						path.push_back(cur);
+						cur = parent;
+					}
+					path.push_back(source);
+
+					reverse(path.begin(), path.end());
+
+					return path;
+				}
+
+				q.push(v);
+			}
+		}
+		vertex[u].color = BLACK;
+	}
+
+	return path;
+}
+
+template <class T>
+vector <int> Graph<T>::BFSbyMatrix(int source, int destination,
+		vector <Node> &vertex)
+{
+	vector <int> path;
+	queue <int> q;
+
+	UpdateMatrix();
+
+	vertex.resize(size);
+
+	vertex[source].color = GRAY;
+	vertex[source].distance = 0;
+	vertex[source].parent = -1;
+
+	q.push(source);
+
+	while (!q.empty())
+	{
+		int u;
+		u = q.front();
+		q.pop();
+
+		for (int v=0; v<adjMatrix[u].size(); v++)
+		{
+			int distance;
+
+			distance = adjMatrix[u][v];
+
+			if (!Connected(distance))
+				continue;
+
+			if (v >= vertex.size())
+			{
+				cout << "Error: index out of range" << endl;
+				return path;
+			}
+
+			if (vertex[v].color == WHITE)
+			{
+				vertex[v].color = GRAY;
+				vertex[v].distance = vertex[u].distance + distance;
+				vertex[v].parent = u;
+
+				if (v == destination)
+				{
+					int cur;
+					int parent;
+
+					cur = v;
+					while ((parent = vertex[cur].parent) != source)
+					{
+						path.push_back(cur);
+						cur = parent;
+					}
+					path.push_back(source);
+
+					reverse(path.begin(), path.end());
+
+					return path;
+				}
+
+				q.push(v);
+			}
+		}
+		vertex[u].color = BLACK;
+	}
+
+	return path;
+}
+
+template <class T>
+bool Graph<T>::Connected(int distance)
+{
+	if (distance == -1)
+		return false;
+	else
+		return true;
+}
+		
+template <class T>
+int Graph<T>::CustomFunctionBFS(int src, int dst, vector <int> path,
+		vector <Node> &vertex)
+{
+	/*
+	 * This one simply returns the distance
+	 */
+	if (path.size() > 0)
+	{
+		return vertex[dst].distance;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+template <class T>
+int Graph<T>::BFS(T source, T destination, bool byMatrix)
+{
+	int src;
+	int dst;
+	vector <Node> vertex;
+	vector <int> path;
+
+	src = mapNameToIdx[source];
+	dst = mapNameToIdx[destination];
+
+	if (byMatrix)
+		path = BFSbyMatrix(src, dst, vertex);
+	else
+		path = BFSbyList(src, dst, vertex);
+
+	return CustomFunctionBFS(src, dst, path, vertex);
 }
 
 template <class T>
