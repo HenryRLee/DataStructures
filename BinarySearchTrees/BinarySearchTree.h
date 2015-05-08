@@ -22,6 +22,8 @@ protected:
 public:
 	void PrintKey(void);
 
+	T ReturnKey(void);
+
 	BinarySearchNode(void);
 
 	friend class BinarySearchTree <T>;
@@ -64,6 +66,12 @@ template <class T>
 void BinarySearchNode<T>::PrintKey(void)
 {
 	cout << key << " ";
+}
+
+template <class T>
+T BinarySearchNode<T>::ReturnKey(void)
+{
+	return key;
 }
 
 template <class T>
