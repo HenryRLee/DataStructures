@@ -25,12 +25,12 @@ protected:
 	class Node
 	{
 	protected:
-		unsigned int distance;
+		unsigned long long distance;
 		int parent;
 		int color;
 
 	public:
-		int GetDistance(void);
+		unsigned long long GetDistance(void);
 
 		Node(void);
 
@@ -46,8 +46,8 @@ protected:
 	map <T, int> mapNameToIdx;
 	vector <T> mapIdxToName;
 
-	vector < vector < pair <int, int> > > adjList;	// pair <idx, distance>
-	vector < vector <int> > adjMatrix;
+	vector < vector < pair <int, long long> > > adjList;	// pair <idx, distance>
+	vector < vector <long long> > adjMatrix;
 
 	vector <Node> vertex;
 
@@ -57,20 +57,21 @@ protected:
 	void InitializeGraph(void);
 
 	bool AddNameToMap(T a);
-	void AddEdgeByIdx(int a, int b, int distance = 1);
+	void AddEdgeByIdx(int a, int b, long long distance = 1);
 
-	virtual bool Connected(int distance);
+	virtual bool Connected(long long distance);
 
-	virtual int CustomFunctionBFS(int src, int dst, vector <int> path);
+	virtual long long CustomFunctionBFS(int src, int dst, vector <int> path);
 	vector<int> BFSbyList(int source, int destination);
 	vector<int> BFSbyMatrix(int source, int destination);
 
 public:
-	void AddEdgeByName(T a, T b, int distance = 1);
+	void FillIndexWithSequence(T start);
+	void AddEdgeByName(T a, T b, long long distance = 1);
 
 	void PrintMatrix(void);
 
-	int BFS(T source, T destination, bool byMatrix = false);
+	long long BFS(T source, T destination, bool byMatrix = false);
 
 	void Clear(void);
 	void Resize(int size);
@@ -81,7 +82,7 @@ public:
 };
 
 template <class T>
-int Graph<T>::Node::GetDistance(void)
+unsigned long long Graph<T>::Node::GetDistance(void)
 {
 	return distance;
 }
@@ -95,7 +96,7 @@ Graph<T>::Node::Node(void)
 }
 
 template <class T>
-void Graph<T>::AddEdgeByIdx(int a, int b, int distance)
+void Graph<T>::AddEdgeByIdx(int a, int b, long long distance)
 {
 	if (adjList.size() <= a)
 	{
@@ -157,9 +158,9 @@ void Graph<T>::UpdateMatrix(void)
 	{
 		for (int j=0; j<adjList[i].size(); j++)
 		{
-			pair <int, int> data;
+			pair <int, long long> data;
 			int idx;
-			int distance;
+			long long distance;
 
 			data = adjList[i][j];
 			idx = data.first;
@@ -171,7 +172,10 @@ void Graph<T>::UpdateMatrix(void)
 				return;
 			}
 
-			adjMatrix[i][idx] = distance;
+			if (adjMatrix[i][idx] == init)
+				adjMatrix[i][idx] = distance;
+			else
+				adjMatrix[i][idx] += distance;
 		}
 	}
 
@@ -220,9 +224,9 @@ vector <int> Graph<T>::BFSbyList(int source, int destination)
 
 		for (int i=0; i<adjList[u].size(); i++)
 		{
-			pair <int, int> data;
+			pair <int, long long> data;
 			int v;
-			int distance;
+			long long distance;
 
 			data = adjList[u][i];
 			v = data.first;
@@ -292,7 +296,7 @@ vector <int> Graph<T>::BFSbyMatrix(int source, int destination)
 
 		for (int v=0; v<adjMatrix[u].size(); v++)
 		{
-			int distance;
+			long long distance;
 
 			distance = adjMatrix[u][v];
 
@@ -340,7 +344,7 @@ vector <int> Graph<T>::BFSbyMatrix(int source, int destination)
 }
 
 template <class T>
-bool Graph<T>::Connected(int distance)
+bool Graph<T>::Connected(long long distance)
 {
 	if (distance == -1)
 		return false;
@@ -349,7 +353,7 @@ bool Graph<T>::Connected(int distance)
 }
 		
 template <class T>
-int Graph<T>::CustomFunctionBFS(int src, int dst, vector <int> path)
+long long Graph<T>::CustomFunctionBFS(int src, int dst, vector <int> path)
 {
 	/*
 	 * This one simply returns the distance
@@ -365,7 +369,7 @@ int Graph<T>::CustomFunctionBFS(int src, int dst, vector <int> path)
 }
 
 template <class T>
-int Graph<T>::BFS(T source, T destination, bool byMatrix)
+long long Graph<T>::BFS(T source, T destination, bool byMatrix)
 {
 	int src;
 	int dst;
@@ -384,7 +388,22 @@ int Graph<T>::BFS(T source, T destination, bool byMatrix)
 }
 
 template <class T>
-void Graph<T>::AddEdgeByName(T a, T b, int distance)
+void Graph<T>::FillIndexWithSequence(T start)
+{
+	T val;
+
+	val = start;
+	for (int i=0; i<mapIdxToName.size(); i++)
+	{
+		mapIdxToName[i] = val;
+		mapNameToIdx[val] = i;
+
+		val++;
+	}
+}
+
+template <class T>
+void Graph<T>::AddEdgeByName(T a, T b, long long distance)
 {
 	if (!AddNameToMap(a) || !AddNameToMap(b))
 		return;
@@ -431,7 +450,9 @@ void Graph<T>::SetInitValue(int val)
 template <class T>
 Graph<T>::Graph(void)
 {
-	Graph(0);
+	Resize(0);
+	maxIdx = 0;
+	init = -1;
 }
 
 template <class T>
