@@ -1,11 +1,13 @@
 == Overview ==
 
-These are the C++ templates that implements some data structures which are not
-included in the Standard Template Library. 
+These are the C++ templates that construct some data structures or functions 
+not included in the Standard Template Library.
 
 == Usage ==
 
 Simply copy the header file to your working directory, and include it.
+
+They are all templates. Simply use them like STL.
 
 == Test Programs ==
 
