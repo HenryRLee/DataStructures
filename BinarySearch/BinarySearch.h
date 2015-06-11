@@ -3,6 +3,12 @@
 
 using namespace std;
 
+/*
+ * Different from the binary_search in <algorithm>, this one does not only
+ * return true or false after the search, but also tells us where the search
+ * ends. Requires the vector sorted before this function is used, otherwise the
+ * result is not reliable.
+ */
 template <typename T>
 pair <bool, T> binarysearch(vector <T> block, int start, int end, int value,
 		bool rightprior = true)
