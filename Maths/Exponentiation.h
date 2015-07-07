@@ -2,7 +2,8 @@
 
 using namespace std;
 
-unsigned long long FastModExp(unsigned long long exp, unsigned long long mod)
+unsigned long long FastModExp(unsigned long long base, unsigned long long exp,
+		unsigned long long mod)
 {
 	if (exp == 0)
 	{
@@ -10,16 +11,19 @@ unsigned long long FastModExp(unsigned long long exp, unsigned long long mod)
 	}
 	else if (exp == 1)
 	{
-		return (2 % mod);
+		return (base % mod);
 	}
 	else
 	{
 		unsigned long long sub;
 		unsigned long long ret;
 
-		sub = FastModExp(exp/2, mod);
+		sub = FastModExp(base, exp/2, mod);
 
-		ret = (sub * sub * (1 << (exp % 2))) % mod;
+		if (exp % 2 == 0)
+			ret = (sub * sub) % mod;
+		else
+			ret = (sub * sub * base) % mod;
 
 		return ret;
 	}
