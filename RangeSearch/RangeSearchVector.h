@@ -18,7 +18,7 @@ public:
 	RangeSearchVector(vector <T> block, bool usemax = false);
 	RangeSearchVector(vector <T> block, int start, int end, bool usemax = false);
 
-	int SetFunctionValue(bool usemax);
+	int SetCompareType(bool usemax);
 
 	int BuildRangeSearchVector(vector <T> block);
 	int BuildRangeSearchVector(vector <T> block, int start, int end);
@@ -68,7 +68,7 @@ int RangeSearchVector<T>::BuildRangeSearchVector(vector <T> block)
 }
 
 template <class T>
-int RangeSearchVector<T>::SetFunctionValue(bool usemax)
+int RangeSearchVector<T>::SetCompareType(bool usemax)
 {
 	bUseMax = usemax;
 
