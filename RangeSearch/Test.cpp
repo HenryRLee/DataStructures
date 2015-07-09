@@ -14,6 +14,8 @@ int main(int argc, char *argv[])
 
 	RangeSearchVector.BuildRangeSearchVector(testvector, 0, testvector.size()-1);
 
+	RangeSearchVector.PrintRangeSearchVector();
+
 	while (cin >> start >> end)
 	{
 		cout << RangeSearchVector.SearchRangeSearchVector(start, end) << endl;

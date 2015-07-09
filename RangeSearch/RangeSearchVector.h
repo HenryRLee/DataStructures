@@ -159,3 +159,19 @@ int RangeSearchVector<T>::SearchRangeSearchVector(int start, int end)
 		return first;
 	}
 }
+
+template <class T>
+int RangeSearchVector<T>::PrintRangeSearchVector(void)
+{
+	for (int i=0; i<layers.size(); i++)
+	{
+		for (int j=0; j<layers[i].size(); j++)
+		{
+			cout << layers[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+
+	return 0;
+}
