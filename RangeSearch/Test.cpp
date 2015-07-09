@@ -5,7 +5,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	int test[] = {0,1,2,3,4,5,6,7,8};
+	int test[] = {0,7,2,5,0,2,1,7,8,4};
+	int start, end;
 
 	vector <int> testvector(test, test + sizeof(test)/sizeof(int));
 
@@ -13,10 +14,8 @@ int main(int argc, char *argv[])
 
 	RangeSearchVector.BuildRangeSearchVector(testvector, 0, testvector.size()-1);
 
-	while (1)
+	while (cin >> start >> end)
 	{
-		int start, end;
-		cin >> start >> end;
 		cout << RangeSearchVector.SearchRangeSearchVector(start, end) << endl;
 	}
 	
