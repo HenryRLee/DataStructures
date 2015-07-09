@@ -10,7 +10,7 @@ class RangeSearchVector
 
 	bool bUseMax;
 
-	T Function(T a, T b);
+	virtual T Function(T a, T b);
 
 public:
 	RangeSearchVector(void);
@@ -24,7 +24,7 @@ public:
 	int BuildRangeSearchVector(vector <T> block, int start, int end);
 	int CleanLayers(void);
 
-	int SearchRangeSearchVector(int start, int end);
+	T SearchRangeSearchVector(int start, int end);
 	int PrintRangeSearchVector(void);
 };
 
@@ -76,7 +76,8 @@ int RangeSearchVector<T>::SetCompareType(bool usemax)
 }
 
 template <class T>
-int RangeSearchVector<T>::BuildRangeSearchVector(vector <T> block, int start, int end)
+int RangeSearchVector<T>::BuildRangeSearchVector(vector <T> block, int start,
+		int end)
 {
 	if ((start < 0) || (start >= block.size()) || (end < 0) ||
 			(end >= block.size()) || (end < start))
@@ -91,7 +92,7 @@ int RangeSearchVector<T>::BuildRangeSearchVector(vector <T> block, int start, in
 		vector <T> newlayer;
 		for (int i=0; i<layers[depth-1].size(); i+=2)
 		{
-			int data;
+			T data;
 
 			if (i == layers[depth-1].size() - 1)
 				data = layers[depth-1][i];
@@ -118,19 +119,20 @@ int RangeSearchVector<T>::CleanLayers(void)
 }
 
 template <class T>
-int RangeSearchVector<T>::SearchRangeSearchVector(int start, int end)
+T RangeSearchVector<T>::SearchRangeSearchVector(int start, int end)
 {
 	int depth;
 	int idx;
 	int next;
-	int first;
-	int second;
+	T first;
+	T second;
 	int interval;
+	T ret;
 
 	if ((layers.size() == 0) || (start < 0) || (start >= layers[0].size()) ||
 			(end < 0) || (end >= layers[0].size()) || (end < start))
 	{
-		return 0;
+		return ret;
 	}
 
 	interval = end - start + 1;
