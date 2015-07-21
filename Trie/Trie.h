@@ -73,6 +73,18 @@ void Trie::Insert(vector <int> v)
 	p->pcount++;
 }
 
+void Trie::Insert(string s, int offset)
+{
+	vector <int> v;
+
+	for (int i=0; i<s.length(); i++)
+	{
+		v.push_back(s[i] - offset);
+	}
+
+	Insert(v);
+}
+
 int Trie::CountPrefix(vector <int> v)
 {
 	TrieNode * p = root;
@@ -137,18 +149,6 @@ int Trie::CountWord(string s, int offset)
 	}
 
 	return CountWord(v);
-}
-
-void Trie::Insert(string s, int offset)
-{
-	vector <int> v;
-
-	for (int i=0; i<s.length(); i++)
-	{
-		v.push_back(s[i] - offset);
-	}
-
-	Insert(v);
 }
 
 void Trie::Init(void)
