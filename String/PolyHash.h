@@ -6,7 +6,6 @@ using namespace std;
 
 class PolyHash
 {
-	vector <int> vtext;
 	vector <long long> vbase;
 	vector <long long> vhash;
 	int base;
@@ -53,8 +52,6 @@ long long PolyHash::FastmodulusExp(long long base, long long exp, long long modu
 
 void PolyHash::BuildHash(vector <int> v)
 {
-	vtext = v;
-
 	vbase.clear();
 	vhash.clear();
 
@@ -90,7 +87,8 @@ long long PolyHash::Hash(int i, int j)
 		return -1;
 	}
 
-	return ((vhash[j+1] - vhash[i]) * vbase[vbase.size() - 1 - j]) % modulus;
+	return (((vhash[j+1] - vhash[i] + modulus) % modulus ) *
+			vbase[vbase.size() - 1 - j]) % modulus;
 }
 
 PolyHash::PolyHash(int base)

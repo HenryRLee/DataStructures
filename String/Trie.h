@@ -57,7 +57,13 @@ void Trie::Insert(vector <int> v)
 	for (int i=0; i<v.size(); i++)
 	{
 		int s = v[i];
-		TrieNode * next = p->next[s];
+		TrieNode * next;
+
+		/* Out of range */
+		if (s >= p->next.size())
+			return;
+
+		next = p->next[s];
 
 		if (next == NULL)
 		{
