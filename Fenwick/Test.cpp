@@ -11,8 +11,9 @@ int main(void)
 
 	for (int i=0; i<sizeof(a)/sizeof(int); i++)
 	{
-		fenwick.Update(i+1, a[i]);
+		fenwick.Update(i, a[i]);
 	}
+
 
 	for (int i=0; i<sizeof(a)/sizeof(int); i++)
 	{

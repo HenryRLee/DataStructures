@@ -8,9 +8,9 @@ class Fenwick
 {
 	vector <T> arr;
 	vector <T> tree;
-	void UpdateDiff(int idx, T diff);
 public:
 	T GetSum(int idx);
+	void UpdateDiff(int idx, T diff);
 	void Update(int idx, T value);
 
 	void Resize(int size);
@@ -27,12 +27,14 @@ T Fenwick<T>::GetSum(int idx)
 
 	sum = 0;
 
-	if (idx > GetSize() || idx <= 0)
+	if (idx >= GetSize() || idx < 0)
 		return -1;
+
+	idx++;
 
 	while (idx > 0)
 	{
-		sum += tree[idx];
+		sum += tree[idx-1];
 		idx = idx - (idx & (-idx));
 	}
 
@@ -42,12 +44,16 @@ T Fenwick<T>::GetSum(int idx)
 template <class T>
 void Fenwick<T>::UpdateDiff(int idx, T diff)
 {
-	if (idx > GetSize() || idx <= 0)
+	if (idx >= GetSize() || idx < 0)
 		return;
 
 	tree[idx] += diff;
 
-	UpdateDiff(idx + (idx & (-idx)), diff);
+	idx++;
+	idx = idx + (idx & (-idx));
+	idx--;
+
+	UpdateDiff(idx, diff);
 }
 
 template <class T>
@@ -55,7 +61,7 @@ void Fenwick<T>::Update(int idx, T value)
 {
 	T diff; 
 
-	if (idx > GetSize() || idx <= 0)
+	if (idx >= GetSize() || idx < 0)
 		return;
 
 	diff = value - arr[idx];
@@ -68,14 +74,14 @@ void Fenwick<T>::Update(int idx, T value)
 template <class T>
 void Fenwick<T>::Resize(int size)
 {
-	tree.resize(size + 1);
-	arr.resize(size + 1);
+	tree.resize(size);
+	arr.resize(size);
 }
 
 template <class T>
 int Fenwick<T>::GetSize(void)
 {
-	return tree.size() - 1;
+	return tree.size();
 }
 
 template <class T>
