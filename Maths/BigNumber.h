@@ -76,6 +76,8 @@ public:
 
 void BigNumber::InputNumber(string input)
 {
+	bits.clear();
+
 	for (int i=0; i<input.length(); i++)
 	{
 		bits.push_back(input[i] - '0');
