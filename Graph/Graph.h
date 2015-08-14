@@ -399,6 +399,7 @@ void Graph<T>::FillIndexWithSequence(T start)
 		mapNameToIdx[val] = i;
 
 		val++;
+		maxIdx++;
 	}
 }
 
